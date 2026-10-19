@@ -1,0 +1,34 @@
+# ====================================================================
+# MySQL Server Custom Configuration for LAMP Stack
+# Đường dẫn trên Ubuntu: /etc/mysql/mysql.conf.d/custom_mysqld.cnf
+# Áp dụng: sudo systemctl restart mysql
+# ====================================================================
+
+[mysqld]
+# 1. Bảo mật mạng: Chỉ lắng nghe cục bộ (ngăn chặn truy cập trực tiếp từ Internet)
+bind-address            = 127.0.0.1
+mysqlx-bind-address     = 127.0.0.1
+
+# 2. Bảng mã UTF-8 đầy đủ (hỗ trợ tiếng Việt có dấu và Emoji)
+character-set-server    = utf8mb4
+collation-server        = utf8mb4_unicode_ci
+
+# 3. Tối ưu hóa bộ nhớ đệm (Tuning cho VM RAM 2GB)
+max_connections         = 100
+connect_timeout         = 5
+wait_timeout            = 600
+max_allowed_packet      = 64M
+thread_cache_size       = 8
+
+# 4. InnoDB Engine Optimization
+innodb_buffer_pool_size = 256M
+innodb_log_file_size    = 64M
+innodb_file_per_table   = 1
+
+# 5. Nhật ký lỗi (Logging)
+log_error = /var/log/mysql/error.log
+
+# 6. Nhật ký truy vấn chậm (Slow Query Log - Hỗ trợ gỡ lỗi và tối ưu)
+slow_query_log          = 1
+slow_query_log_file     = /var/log/mysql/mysql-slow.log
+long_query_time         = 2

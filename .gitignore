@@ -1,0 +1,23 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Backup files and logs
+/var/backups/
+*.tar.gz
+*.sql.gz
+*.sql
+!src/db_schema.sql
+*.log
+
+# Sensitive credentials & private keys
+*.key
+*.pem
+*.crt
+configs/security/*.key
+
+# IDE settings
+.vscode/
+.idea/

@@ -1,0 +1,53 @@
+# ====================================================================
+# Fail2ban Local Configuration for LAMP Stack Server
+# Đường dẫn trên Ubuntu: /etc/fail2ban/jail.local
+# Áp dụng: sudo systemctl restart fail2ban
+# ====================================================================
+
+[DEFAULT]
+# Thời gian bỏ qua (IP Whitelist - Máy tính cục bộ của các thành viên)
+ignoreip = 127.0.0.1/8 ::1
+
+# Thời gian bị khóa (ban) tính bằng giây (1 giờ = 3600s)
+bantime  = 1h
+
+# Khoảng thời gian theo dõi các lần thử đăng nhập thất bại (10 phút)
+findtime = 10m
+
+# Số lần thử sai tối đa trước khi bị cấm IP
+maxretry = 5
+
+# Hình thức thông báo và chặn (sử dụng iptables-multiport hoặc ufw)
+banaction = ufw
+
+# --------------------------------------------------------------------
+# 1. Bảo vệ dịch vụ SSH (Chống tấn công Brute-Force mật khẩu)
+# --------------------------------------------------------------------
+[sshd]
+enabled  = true
+port     = ssh
+logpath  = %(sshd_log)s
+backend  = %(default_backend)s
+maxretry = 3
+bantime  = 2h
+
+# --------------------------------------------------------------------
+# 2. Bảo vệ Web Server Apache khỏi tấn công dò quét URL độc hại (404/Auth)
+# --------------------------------------------------------------------
+[apache-auth]
+enabled  = true
+port     = http,https
+logpath  = %(apache_error_log)s
+maxretry = 5
+
+[apache-noscript]
+enabled  = true
+port     = http,https
+logpath  = %(apache_error_log)s
+maxretry = 5
+
+[apache-overflows]
+enabled  = true
+port     = http,https
+logpath  = %(apache_error_log)s
+maxretry = 3
