@@ -15,6 +15,11 @@ Linux_Oss/
 ├── README.md                           # Giới thiệu tổng quan và hướng dẫn nhanh dự án
 │
 ├── docs/                               # Toàn bộ tài liệu học thuật và kịch bản
+│   ├── reports/                        # Báo cáo tiến độ đồ án theo tuần (Nộp Giảng viên)
+│   │   ├── TONG_QUAN_TIEN_DO.md        # Tổng quan toàn bộ tiến độ dự án 3 tuần
+│   │   ├── BAO_CAO_TUAN_1.md           # Báo cáo Tuần 1: Khởi tạo hạ tầng & Core LAMP Stack
+│   │   ├── BAO_CAO_TUAN_2.md           # Báo cáo Tuần 2: Bảo mật UFW, Fail2ban, SSL & Web App CRUD
+│   │   └── BAO_CAO_TUAN_3.md           # Báo cáo Tuần 3: Benchmark ab, Backup Cron & Nghiệm thu
 │   ├── lamp_stack_project_plan.md      # Kế hoạch chi tiết 6 giai đoạn, phân công & RACI matrix
 │   ├── deployment_guide.md             # Hướng dẫn triển khai từng bước từ A đến Z
 │   ├── troubleshooting_guide.md        # Cẩm nang xử lý 7 lỗi kinh điển & mẹo vấn đáp
@@ -96,6 +101,11 @@ sudo ./scripts/backup_lamp.sh
 ---
 
 ## 📖 4. Tài Liệu Tham Khảo Trong Thư Mục `docs/`
+- **Báo cáo tiến độ đồ án theo tuần (Nộp Giảng viên)**:
+  * [Báo cáo Tổng Quan Tiến Độ](docs/reports/TONG_QUAN_TIEN_DO.md)
+  * [Báo cáo Tuần 1: Hạ tầng & Core LAMP](docs/reports/BAO_CAO_TUAN_1.md)
+  * [Báo cáo Tuần 2: Bảo mật & Web App Full CRUD](docs/reports/BAO_CAO_TUAN_2.md)
+  * [Báo cáo Tuần 3: Benchmark ab, Backup & Nghiệm thu](docs/reports/BAO_CAO_TUAN_3.md)
 - Xem phân công công việc & biểu đồ Gantt: [Kế hoạch chi tiết](docs/lamp_stack_project_plan.md)
 - Xem hướng dẫn chi tiết từng câu lệnh: [Deployment Guide](docs/deployment_guide.md)
 - Xem giải thích lỗi và trả lời vấn đáp: [Troubleshooting Guide](docs/troubleshooting_guide.md)
