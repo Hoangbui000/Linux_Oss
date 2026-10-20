@@ -23,7 +23,9 @@ Linux_Oss/
 │   ├── lamp_stack_project_plan.md      # Kế hoạch chi tiết 6 giai đoạn, phân công & RACI matrix
 │   ├── deployment_guide.md             # Hướng dẫn triển khai từng bước từ A đến Z
 │   ├── troubleshooting_guide.md        # Cẩm nang xử lý 7 lỗi kinh điển & mẹo vấn đáp
-│   └── demo_presentation_guide.md      # Kịch bản 10 phút thuyết trình & Live Demo đạt điểm tối đa
+│   ├── demo_presentation_guide.md      # Kịch bản 10 phút thuyết trình & Live Demo đạt điểm tối đa
+│   ├── huong_dan_chay.md               # Sổ tay từng bước cài đặt và vận hành hệ thống
+│   └── huong_dan_demo.md               # Kịch bản demo trực tiếp & các màn hình kết quả mẫu
 │
 ├── configs/                            # Các file cấu hình mẫu tối ưu hóa hệ thống
 │   ├── apache/
@@ -110,5 +112,5 @@ sudo ./scripts/backup_lamp.sh
 - Xem hướng dẫn chi tiết từng câu lệnh: [Deployment Guide](docs/deployment_guide.md)
 - Xem giải thích lỗi và trả lời vấn đáp: [Troubleshooting Guide](docs/troubleshooting_guide.md)
 - Xem kịch bản thuyết trình bảo vệ đồ án: [Presentation & Demo Guide](docs/demo_presentation_guide.md)
-- **Hướng dẫn từng bước chạy dự án trên máy bản thân**: [Hướng Dẫn Chạy](huong_dan_chay.md)
-- **Kịch bản Demo trực tiếp & Kết quả mẫu chi tiết**: [Hướng Dẫn Demo](huong_dan_demo.md)
+- **Hướng dẫn từng bước chạy dự án trên máy bản thân**: [Hướng Dẫn Chạy](docs/huong_dan_chay.md)
+- **Kịch bản Demo trực tiếp & Kết quả mẫu chi tiết**: [Hướng Dẫn Demo](docs/huong_dan_demo.md)
