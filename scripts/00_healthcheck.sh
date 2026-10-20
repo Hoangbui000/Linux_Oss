@@ -78,7 +78,25 @@ if command -v mysql &>/dev/null; then
 fi
 echo ""
 
-echo -e "${YELLOW}5. TÀI NGUYÊN HỆ THỐNG (RESOURCE USAGE):${NC}"
+echo -e "${YELLOW}5. KIỂM TRA BẢO MẬT SSL & VIRTUALHOST:${NC}"
+SSL_CERT="/etc/ssl/certs/lamp_selfsigned.crt"
+if [[ -f "${SSL_CERT}" ]]; then
+    CERT_EXPIRY=$(openssl x509 -enddate -noout -in "${SSL_CERT}" 2>/dev/null | cut -d= -f2 || echo "N/A")
+    echo -e "[ ${GREEN}OK${NC} ] Chứng chỉ SSL (/etc/ssl/certs/lamp_selfsigned.crt): Tồn tại (Hạn dùng: ${CERT_EXPIRY})"
+else
+    echo -e "[ ${YELLOW}WARN${NC} ] Chưa tìm thấy chứng chỉ SSL tại ${SSL_CERT}"
+fi
+
+# Kiểm tra chuyển hướng HTTP -> HTTPS
+REDIRECT_CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "Host: lamp.local" http://127.0.0.1/ 2>/dev/null || echo "000")
+if [[ "${REDIRECT_CODE}" == "301" || "${REDIRECT_CODE}" == "302" ]]; then
+    echo -e "[ ${GREEN}OK${NC} ] Tự động chuyển hướng HTTP sang HTTPS (Code: ${REDIRECT_CODE}): ĐẠT"
+else
+    echo -e "[ ${YELLOW}INFO${NC} ] Phản hồi HTTP port 80 (HTTP Code: ${REDIRECT_CODE})"
+fi
+echo ""
+
+echo -e "${YELLOW}6. TÀI NGUYÊN HỆ THỐNG (RESOURCE USAGE):${NC}"
 echo -e "  - RAM:  $(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
 echo -e "  - Disk: $(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 " used)"}')"
 echo ""

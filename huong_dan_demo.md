@@ -145,21 +145,27 @@ Trước khi thầy cô gọi tên vào chấm đồ án:
 ### BƯỚC 3: Demo Ứng Dụng Động Tương Tác CSDL MySQL (Thành viên B & C)
 
 * **Lời thoại**:
-  > *"Để chứng minh LAMP Stack xử lý mượt mà ứng dụng động thực tế chứ không chỉ phục vụ trang web tĩnh, nhóm em đã xây dựng module Quản lý Sinh viên kết nối MySQL qua PHP PDO, có tính năng Thêm - Xem - Xóa dữ liệu và đo lường thời gian phản hồi câu truy vấn."*
+  > *"Để chứng minh LAMP Stack xử lý mượt mà ứng dụng động thực tế chứ không chỉ phục vụ trang web tĩnh, nhóm em đã xây dựng module Quản lý Sinh viên kết nối MySQL qua PHP PDO, chuẩn 100% mô hình CRUD: Thêm (Create) - Xem (Read) - Sửa (Update) - Xóa (Delete) và đo lường thời gian phản hồi câu truy vấn trực tiếp."*
 
 * **Thao tác trên Trình duyệt (`https://lamp.local/crud_demo.php`)**:
   1. Thầy cô sẽ thấy bảng dữ liệu mẫu sẵn có 3 thành viên:
      - `B21DCCN001` - Nguyễn Văn A - Nhóm trưởng / Hạ Tầng & Điều Phối (35%)
      - `B21DCCN002` - Trần Thị B - Chuyên trách Web Server & PHP (35%)
      - `B21DCCN003` - Lê Văn C - Chuyên trách Database & Security (30%)
-  2. **Thực hiện Thêm mới một sinh viên**:
+  2. **Thực hiện Thêm mới một sinh viên (Create)**:
      - Nhập Mã SV: `B21DCCN999`
      - Họ tên: `Giảng Viên Chấm Điểm`
      - Email: `thaygiao@vku.udn.vn`
      - Bấm nút **"Ghi Dữ Liệu Vào MySQL"**.
-  3. **Kết quả**:
+  3. **Kết quả Thêm mới**:
      - Bảng thông báo màu xanh hiện lên: *"Thêm thành viên 'Giảng Viên Chấm Điểm' thành công vào MySQL!"*.
      - Dòng mới lập tức xuất hiện trong bảng.
+  4. **Thực hiện Chỉnh sửa thông tin (Update)**:
+     - Bấm nút **"Sửa"** màu xanh dương ở dòng `B21DCCN999`.
+     - Cửa sổ Modal hiện lên, đổi Vai trò thành: `Giám Khảo Đánh Giá (Điểm 10)`.
+     - Bấm **"Lưu Cập Nhật"** -> Dữ liệu cập nhật ngay lập tức vào MySQL!
+  5. **Thực hiện Xóa (Delete)**:
+     - Bấm nút **"Xóa"** màu đỏ ở dòng cần xoá -> Xác nhận -> Bản ghi bị xoá khỏi CSDL.
      - Thanh thời gian thực thi (Metrics) ở cuối trang: `Thời gian thực thi truy vấn: 1.45 ms`.
 
 * **Thao tác kiểm chứng trực tiếp trong Terminal MySQL (Thành viên C gõ)**:

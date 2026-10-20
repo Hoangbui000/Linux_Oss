@@ -43,6 +43,26 @@ try {
         }
     }
 
+    // Xử lý Cập nhật (Sửa) thành viên
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit') {
+        $id = (int)($_POST['id'] ?? 0);
+        $studentCode = trim($_POST['student_code'] ?? '');
+        $fullName = trim($_POST['full_name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $className = trim($_POST['class_name'] ?? '');
+        $projectRole = trim($_POST['project_role'] ?? '');
+
+        if ($id > 0 && $studentCode !== '' && $fullName !== '' && $email !== '') {
+            $stmt = $pdo->prepare("UPDATE students SET student_code = ?, full_name = ?, email = ?, class_name = ?, project_role = ? WHERE id = ?");
+            $stmt->execute([$studentCode, $fullName, $email, $className, $projectRole, $id]);
+            $message = "Cập nhật thành viên '{$fullName}' thành công!";
+            $messageType = 'success';
+        } else {
+            $message = 'Vui lòng nhập đầy đủ các trường bắt buộc!';
+            $messageType = 'warning';
+        }
+    }
+
     // Xử lý Xóa thành viên
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
         $id = (int)($_POST['id'] ?? 0);
@@ -195,6 +215,55 @@ $executionTime = number_format((microtime(true) - $startTime) * 1000, 2);
             border: 1px solid #7f1d1d;
         }
         .btn-danger:hover { background: #7f1d1d; color: white; }
+        .btn-edit {
+            background: transparent;
+            color: var(--primary);
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid #0284c7;
+        }
+        .btn-edit:hover { background: #0284c7; color: white; }
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .modal-box h3 { margin-top: 0; color: var(--primary); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-cancel {
+            background: #334155;
+            color: #f1f5f9;
+            padding: 10px 16px;
+            flex: 1;
+        }
+        .btn-cancel:hover { background: #475569; }
+        .btn-save {
+            background: #0284c7;
+            color: white;
+            padding: 10px 16px;
+            flex: 1;
+        }
+        .btn-save:hover { background: #0369a1; }
         .metrics {
             margin-top: 24px;
             background: #090d16;
@@ -256,11 +325,14 @@ $executionTime = number_format((microtime(true) - $startTime) * 1000, 2);
                                     <td><?= htmlspecialchars($s['class_name']) ?></td>
                                     <td><span style="color: var(--primary);"><?= htmlspecialchars($s['project_role']) ?></span></td>
                                     <td>
-                                        <form method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bản ghi này?');" style="margin: 0;">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
-                                            <button type="submit" class="btn-danger">Xóa</button>
-                                        </form>
+                                        <div class="action-btns">
+                                            <button type="button" class="btn-edit" onclick='openEditModal(<?= json_encode($s, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>Sửa</button>
+                                            <form method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bản ghi này?');" style="margin: 0;">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="<?= (int)$s['id'] ?>">
+                                                <button type="submit" class="btn-danger">Xóa</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -306,6 +378,63 @@ $executionTime = number_format((microtime(true) - $startTime) * 1000, 2);
         <span>🗄️ Database: <strong>MySQL (lamp_db)</strong></span>
         <span>🚀 Web Server: <strong><?= htmlspecialchars($_SERVER['SERVER_SOFTWARE'] ?? 'Apache') ?></strong></span>
     </div>
+    </div>
 </div>
+
+<!-- Modal Chỉnh Sửa Thông Tin Sinh Viên (Update Operation) -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3>✏️ Chỉnh Sửa Thành Viên (Update)</h3>
+        <form method="POST">
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="id" id="edit_id">
+            <div class="form-group">
+                <label>Mã Sinh Viên / Mã Số (*)</label>
+                <input type="text" name="student_code" id="edit_student_code" required>
+            </div>
+            <div class="form-group">
+                <label>Họ và Tên (*)</label>
+                <input type="text" name="full_name" id="edit_full_name" required>
+            </div>
+            <div class="form-group">
+                <label>Email Liên Hệ (*)</label>
+                <input type="email" name="email" id="edit_email" required>
+            </div>
+            <div class="form-group">
+                <label>Lớp Sinh Hoạt</label>
+                <input type="text" name="class_name" id="edit_class_name">
+            </div>
+            <div class="form-group">
+                <label>Vai Trò Trong Đồ Án</label>
+                <input type="text" name="project_role" id="edit_project_role">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Hủy</button>
+                <button type="submit" class="btn-save">Lưu Cập Nhật</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditModal(student) {
+    document.getElementById('edit_id').value = student.id;
+    document.getElementById('edit_student_code').value = student.student_code;
+    document.getElementById('edit_full_name').value = student.full_name;
+    document.getElementById('edit_email').value = student.email;
+    document.getElementById('edit_class_name').value = student.class_name;
+    document.getElementById('edit_project_role').value = student.project_role;
+    document.getElementById('editModal').classList.add('active');
+}
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+}
+window.onclick = function(event) {
+    var modal = document.getElementById('editModal');
+    if (event.target === modal) {
+        closeEditModal();
+    }
+};
+</script>
 </body>
 </html>

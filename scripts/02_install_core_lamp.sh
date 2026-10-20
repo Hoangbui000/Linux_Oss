@@ -36,6 +36,37 @@ mkdir -p "${WEB_ROOT}"
 chown -R www-data:www-data /var/www/lamp.local
 chmod -R 755 /var/www/lamp.local
 
+# Đảm bảo có chứng chỉ SSL trước khi nạp VirtualHost port 443
+SSL_CERT="/etc/ssl/certs/lamp_selfsigned.crt"
+SSL_KEY="/etc/ssl/private/lamp_selfsigned.key"
+if [[ ! -f "${SSL_KEY}" || ! -f "${SSL_CERT}" ]]; then
+    echo "[INFO] Khởi tạo SSL Certificate ban đầu cho VirtualHost..."
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout "${SSL_KEY}" \
+        -out "${SSL_CERT}" \
+        -subj "/C=VN/ST=Hanoi/L=Hanoi/O=Linux_Oss/OU=LAMP_Project/CN=lamp.local"
+    chmod 640 "${SSL_KEY}"
+    chmod 644 "${SSL_CERT}"
+fi
+
+# Nạp cấu hình bảo mật Security Headers nếu có
+SECURITY_CONF="$(dirname "$0")/../configs/apache/security_headers.conf"
+if [[ -f "${SECURITY_CONF}" ]]; then
+    echo "[INFO] Cấu hình Security Headers cho Apache..."
+    cp "${SECURITY_CONF}" /etc/apache2/conf-available/security_headers.conf
+    a2enconf security_headers
+fi
+
+# Nạp cấu hình PHP tối ưu (custom_php.ini)
+PHP_CUSTOM_CONF="$(dirname "$0")/../configs/php/custom_php.ini"
+if [[ -f "${PHP_CUSTOM_CONF}" ]] && command -v php &>/dev/null; then
+    PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+    echo "[INFO] Áp dụng cấu hình tối ưu custom_php.ini cho PHP ${PHP_VER}..."
+    mkdir -p "/etc/php/${PHP_VER}/apache2/conf.d" "/etc/php/${PHP_VER}/cli/conf.d"
+    cp "${PHP_CUSTOM_CONF}" "/etc/php/${PHP_VER}/apache2/conf.d/99-custom.ini"
+    cp "${PHP_CUSTOM_CONF}" "/etc/php/${PHP_VER}/cli/conf.d/99-custom.ini"
+fi
+
 # 5. Kích hoạt Virtual Host lamp.local
 CONFIG_SRC="$(dirname "$0")/../configs/apache/lamp.local.conf"
 if [[ -f "${CONFIG_SRC}" ]]; then

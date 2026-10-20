@@ -36,7 +36,9 @@ echo "[INFO] Bản backup Mã nguồn mới nhất: ${LATEST_WEB_BACKUP}"
 echo ""
 
 # 2. Khôi phục Cơ sở dữ liệu MySQL
-echo "[INFO] Đang giải nén và nạp lại Database '${DB_NAME}'..."
+echo "[INFO] Đảm bảo Database '${DB_NAME}' sẵn sàng..."
+mysql -u"${DB_USER}" -p"${DB_PASS}" -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || true
+echo "[INFO] Đang giải nén và nạp lại dữ liệu vào Database '${DB_NAME}'..."
 gunzip -c "${LATEST_DB_BACKUP}" | mysql -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}"
 echo "[SUCCESS] Khôi phục cơ sở dữ liệu MySQL thành công!"
 

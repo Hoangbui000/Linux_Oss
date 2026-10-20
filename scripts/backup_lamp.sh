@@ -21,7 +21,7 @@ echo "[INFO] [$(date)] Bắt đầu tiến trình sao lưu LAMP Server..."
 
 # 1. Sao lưu Cơ sở dữ liệu MySQL
 echo "[INFO] Đang sao lưu Database '${DB_NAME}'..."
-mysqldump -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" | gzip > "${BACKUP_DIR}/db_${DB_NAME}_${TIMESTAMP}.sql.gz"
+mysqldump --no-tablespaces -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" | gzip > "${BACKUP_DIR}/db_${DB_NAME}_${TIMESTAMP}.sql.gz"
 
 # 2. Sao lưu Source Code Web
 echo "[INFO] Đang nén mã nguồn web tại '${WEB_ROOT}'..."
